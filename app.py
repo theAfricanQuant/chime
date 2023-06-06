@@ -120,13 +120,9 @@ def sir(y, beta, gamma, N):
     Sn = (-beta * S * I) + S
     In = (beta * S * I - gamma * I) + I
     Rn = gamma * I + R
-    if Sn < 0:
-        Sn = 0
-    if In < 0:
-        In = 0
-    if Rn < 0:
-        Rn = 0
-
+    Sn = max(Sn, 0)
+    In = max(In, 0)
+    Rn = max(Rn, 0)
     scale = N / (Sn + In + Rn)
     return Sn * scale, In * scale, Rn * scale
 
@@ -135,7 +131,7 @@ def sir(y, beta, gamma, N):
 def sim_sir(S, I, R, beta, gamma, n_days, beta_decay=None):
     N = S + I + R
     s, i, r = [S], [I], [R]
-    for day in range(n_days):
+    for _ in range(n_days):
         y = S, I, R
         S, I, R = sir(y, beta, gamma, N)
         if beta_decay:
